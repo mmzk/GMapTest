@@ -16,33 +16,28 @@
     </style>
 		
 		
-		<script type="text/javascript"
-			src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAP0QJNvoaw8rOBjWgDsClVw5zHlmM9l5o&sensor=TRUE">
-		
-		</script>
+		<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAP0QJNvoaw8rOBjWgDsClVw5zHlmM9l5o&sensor=TRUE"></script>
 		
 		<!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script> -->
-		
 		<script>
 var map;
 function initMap(){
 	
-	var loc_kawasaki = new google.maps.LatLng(35.53091, 139.70305);
-	var mapOptions = {
-		center: loc_kawasaki,
-		zoom: 15
-	};
-	map = new google.maps.Map(document.getElementById('map_canvas'), {
-		center: loc_kawasaki,
-		zoom: 15
-	});
+	var kawasaki = new google.maps.LatLng(35.53091, 139.70305);
+
+	  map = new google.maps.Map(document.getElementById('map_canvas'), {
+	    center: kawasaki,
+	    zoom: 15
+	  });
+	  alert('value:'+document.getElementById('map_canvas').value);
+	  
 }	    
-google.maps.event.addDomListener(window, 'load', initMap);
+//google.maps.event.addDomListener(window, 'load', initMap);
 		</script>
 	</head>
 	
-	<body>
-		<div id="map_canvas"></div>
+	<body onload="initMap()">
+		<div id="map_canvas">1</div>
 		
 	</body>
 </html>
