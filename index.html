@@ -28,7 +28,7 @@ var geoLat;
 var geoLng;
 var infoWindow;
 var startPos;
-
+var resList;
 
 function initMap(){
 	
@@ -61,7 +61,7 @@ function callbackNearbySearch(startPos){
 	/*Create Request for Place Service*/
 	var restaurantServiceReq = {
 			location: startPos,
-			radius: 500,
+			radius: 1000,
 			types: ['restaurant','food']
 	}
 	
@@ -72,11 +72,14 @@ function callbackNearbySearch(startPos){
 }
 /*Callback Restaurant Service*/
 function callbackRestaurantService(results, status){
+	resList = results;
 	if(status == google.maps.places.PlacesServiceStatus.OK){
-		for(var i = 0 ; i < results.length ; i++){
-			createMarker(results[i]);
-			createResultList(results[i]);
+		for(var i = 0 ; i < resList.length ; i++){
+			//createMarker(resList[i]);
+			createResultList(resList[i]);
+			
 		}
+		getResultRandom();
 	}
 	
 }
@@ -93,6 +96,7 @@ function createMarker(place){
 		
 	});
 }
+
 function handleNoGeolocation(errorFlag){
 		if(errorFlag){
 			var msg = "error: Geolocation Service Failed.";
@@ -101,7 +105,18 @@ function handleNoGeolocation(errorFlag){
 		}
 }
 function createResultList(place){
-	document.body.innerHTML += "<b>"+place.geometry.location+"</b>";
+	document.getElementById("list_lunch_sel").innerHTML += "<option value=\"\">"+place.name+"</option>";
+	
+}
+function getResultRandom(){
+	//resList
+	var resNum = resList.length;
+	var randNum;
+	//range : 0 ~ results.length
+	randNum = Math.floor(Math.random()*resNum);
+
+	document.getElementById("random_result_lunch").innerHTML = ""+resList[randNum].name;
+	createMarker(resList[randNum]);
 	
 }
 	
@@ -113,8 +128,14 @@ google.maps.event.addDomListener(window, 'load', initMap);
 		<div id="map_canvas"></div>
 		<div id="content">
 			<h1>今日の飯はどこでしましょうか？</h1>
-			현재 위치 : <span id="prt_loc"></span> 좌표 : <span id="prt_LatLng"></span>
-			<div id="list_gurume"><select></select></div>
+			<button type="button" onclick="getResultRandom()">Random Select!</button><br/>
+			<!-- 구현할것 1. 랜덤 버튼 액션, 2. marker 처리 -->
+			<h1 id="random_result_lunch"></h1>
+			<b>모든 음식점 리스트</b></br>
+			<!-- 현재 위치 : <span id="prt_loc"></span> 좌표 : <span id="prt_LatLng"></span> -->
+			
+			<div id="list_lunch"><select id="list_lunch_sel"></select></div>
 		</div>
+
 	</body>
-</ml>
+</html>
