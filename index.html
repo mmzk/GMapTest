@@ -29,6 +29,7 @@ var geoLng;
 var infoWindow;
 var startPos;
 var resList;
+var markers = [];
 
 function initMap(){
 	
@@ -61,7 +62,7 @@ function callbackNearbySearch(startPos){
 	/*Create Request for Place Service*/
 	var restaurantServiceReq = {
 			location: startPos,
-			radius: 1000,
+			radius: 900,
 			types: ['restaurant','food']
 	}
 	
@@ -83,20 +84,28 @@ function callbackRestaurantService(results, status){
 	}
 	
 }
-/*Create Mareker*/
+/*Create Marker*/
 function createMarker(place){
 	var placeLoc = place.geometry.location;
 	var marker = new google.maps.Marker({
 		map: map,
 		position: place.geometry.location
 	});
+	markers.push(marker);
+	//marker지울때 이벤트도
 	google.maps.event.addListener(marker, 'click', function(){
 		infoWindow.setContent(place.name);
 		infoWindow.open(map, this);
 		
 	});
 }
-
+/*Remove Markers*/
+function removeAllMarkers(){
+	for(var i = 0 ; markers.length ; i++){
+		markers[i].setMap(null);////////////////////////////////////////////////////
+	}
+	markers = [];
+}
 function handleNoGeolocation(errorFlag){
 		if(errorFlag){
 			var msg = "error: Geolocation Service Failed.";
@@ -115,7 +124,8 @@ function getResultRandom(){
 	//range : 0 ~ results.length
 	randNum = Math.floor(Math.random()*resNum);
 
-	document.getElementById("random_result_lunch").innerHTML = ""+resList[randNum].name;
+	document.getElementById("random_result_lunch").innerHTML = "" + resList[randNum].name;
+	removeAllMarkers();
 	createMarker(resList[randNum]);
 	
 }
