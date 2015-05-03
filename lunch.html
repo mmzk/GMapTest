@@ -6,7 +6,7 @@
 	
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-	
+	<link href="css/buttons.css" rel="stylesheet" type="text/css">
     <style>
       html, body {
         height: 100%;
@@ -37,7 +37,7 @@ function initMap(){
 	
 	/*Create Google Map*/
 	var mapOption = {
-	    zoom: 15
+	    zoom: 17
 		}
 	map = new google.maps.Map(document.getElementById("map_canvas"), mapOption);
 	
@@ -62,7 +62,7 @@ function callbackNearbySearch(startPos){
 	/*Create Request for Place Service*/
 	var restaurantServiceReq = {
 			location: startPos,
-			radius: 900,
+			radius: 700,
 			types: ['restaurant','food']
 	}
 	
@@ -76,11 +76,11 @@ function callbackRestaurantService(results, status){
 	resList = results;
 	if(status == google.maps.places.PlacesServiceStatus.OK){
 		for(var i = 0 ; i < resList.length ; i++){
-			//createMarker(resList[i]);
+			createMarker(resList[i]);
 			createResultList(resList[i]);
 			
 		}
-		getResultRandom();
+
 	}
 	
 }
@@ -92,7 +92,7 @@ function createMarker(place){
 		position: place.geometry.location
 	});
 	markers.push(marker);
-	//marker지울때 이벤트도
+	//<?>marker지울때 이벤트 처리
 	google.maps.event.addListener(marker, 'click', function(){
 		infoWindow.setContent(place.name);
 		infoWindow.open(map, this);
@@ -101,8 +101,8 @@ function createMarker(place){
 }
 /*Remove Markers*/
 function removeAllMarkers(){
-	for(var i = 0 ; markers.length ; i++){
-		markers[i].setMap(null);////////////////////////////////////////////////////
+	for(var i = 0 ; i < markers.length ; i++){
+		markers[i].setMap(null);
 	}
 	markers = [];
 }
@@ -127,7 +127,12 @@ function getResultRandom(){
 	document.getElementById("random_result_lunch").innerHTML = "" + resList[randNum].name;
 	removeAllMarkers();
 	createMarker(resList[randNum]);
-	
+
+	map.setCenter(resList[randNum].geometry.location);
+
+}
+function addRestaurantList(){
+
 }
 	
 google.maps.event.addDomListener(window, 'load', initMap);
@@ -138,10 +143,10 @@ google.maps.event.addDomListener(window, 'load', initMap);
 		<div id="map_canvas"></div>
 		<div id="content">
 			<h1>今日の飯はどこでしましょうか？</h1>
-			<button type="button" onclick="getResultRandom()">Random Select!</button><br/>
+			<button class="btnRand" type="button" onclick="getResultRandom()">Random Select!</button><br/>
 			<!-- 구현할것 1. 랜덤 버튼 액션, 2. marker 처리 -->
 			<h1 id="random_result_lunch"></h1>
-			<b>모든 음식점 리스트</b></br>
+			<b>모든 음식점 리스트</b><br/>
 			<!-- 현재 위치 : <span id="prt_loc"></span> 좌표 : <span id="prt_LatLng"></span> -->
 			
 			<div id="list_lunch"><select id="list_lunch_sel"></select></div>
